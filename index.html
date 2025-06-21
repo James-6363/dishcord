@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini Discord</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #2c2f33; color: white; }
+    #chat-container { display: flex; height: 100vh; }
+    #channels { width: 200px; background: #23272a; padding: 10px; }
+    #chat { flex: 1; display: flex; flex-direction: column; }
+    #messages { flex: 1; padding: 10px; overflow-y: auto; }
+    #input-box { display: flex; padding: 10px; background: #2c2f33; }
+    #input-box input { flex: 1; padding: 10px; border: none; border-radius: 5px; }
+    #input-box button { margin-left: 10px; padding: 10px; border: none; background: #7289da; color: white; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<div id="chat-container">
+  <div id="channels">
+    <h3>Channels</h3>
+    <p># general</p>
+  </div>
+  <div id="chat">
+    <div id="messages">
+      <p><i>Welcome to Mini Discord!</i></p>
+    </div>
+    <div id="input-box">
+      <input type="text" id="message" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const webhookURL = "https://webhook.site/YOUR_WEBHOOK_ID";
+
+  function sendMessage() {
+    const input = document.getElementById("message");
+    const msg = input.value;
+    if (!msg.trim()) return;
+
+    // Append to local chat window
+    const msgBox = document.getElementById("messages");
+    const p = document.createElement("p");
+    p.textContent = "You: " + msg;
+    msgBox.appendChild(p);
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    // Send to webhook
+    fetch(webhookURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: msg })
+    });
+
+    input.value = "";
+  }
+</script>
+</body>
+</html>
